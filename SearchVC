@@ -1,0 +1,31 @@
+import UIKit
+import RxCocoa
+import RxSwift
+
+class SearchVC: UIViewController {
+    @IBOutlet weak var searchBar: UISearchBar!
+     let disposeBag = DisposeBag()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        searchBar
+            .rx.text
+            .filter { $0.characters.count > 2 }
+            .debounce(0.5, scheduler: MainScheduler.instance)
+            .throttle(0.5, scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { [unowned self](query) in
+                print(query)
+                //Do something with the query
+                
+                }, onError: { (Error) in
+                    
+            }, onCompleted: {
+                
+            }) {
+            }
+            .addDisposableTo(disposeBag)
+        
+    }
+    
+    }
